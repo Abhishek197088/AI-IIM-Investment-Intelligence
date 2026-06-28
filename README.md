@@ -156,6 +156,6 @@ graph TD
 
 ## 🎁 Bonus Points: LLM Session Logs
 
-This project was developed through pair-programming with an AI coding agent (**Gemini 3.5 Flash**). Complete chronological transcripts, execution traces, tool invocation logs, and decision-making steps are recorded in:
+This project was developed through pair-programming with an coding . Complete chronological transcripts, execution traces, tool invocation logs, and decision-making steps are recorded in:
 - Detailed Summary: [`transcripts/README.md`](transcripts/README.md)
 - Raw System Logs: `<appDataDir>/brain/<conversation-id>/.system_generated/logs/transcript.jsonl`
