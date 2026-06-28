@@ -17,6 +17,7 @@
 ## 📌 Table of Contents
 - [Overview](#-overview)
 - [Key Features](#-key-features)
+- [📸 Application Screenshots & Output Examples](#-application-screenshots--output-examples)
 - [How to Run](#-how-to-run)
 - [Architecture & How It Works](#-architecture--how-it-works)
 - [Key Decisions & Trade-offs](#-key-decisions--trade-offs)
@@ -42,6 +43,40 @@ The system dynamically fetches real-time financial statements, extracts market n
   - **Google Gemini 2.5 Flash** for deep financial analysis, risk assessment, and investment decision synthesis.
 - 📊 **Financial Dashboard**: Interactive UI rendering historical revenue/net income charts, key metrics (P/E ratio, ROE, Debt-to-Equity, FCF), and categorized risk factors.
 - 🛡️ **Nuanced 3-Tier Recommendation**: Uses **INVEST**, **PASS**, or **HOLD** (instead of forcing binary calls) to accurately reflect market uncertainty and valuation sensitivity.
+
+---
+
+## 📸 Application Screenshots & Output Examples
+
+Here is a visual breakdown of EquityLens AI in action across various stages of analysis:
+
+### 1. Real-Time Multi-Node Execution Progress
+*Live tracking of research nodes executing in parallel over Server-Sent Events (SSE).*
+![Research Progress](docs/images/01_research_progress.jpg)
+
+---
+
+### 2. Main Executive Decision Banner & Confidence Gauge
+*Synthesized investment call featuring confidence score ring, thesis statement, and target horizon.*
+![Investment Decision](docs/images/02_investment_decision.jpg)
+
+---
+
+### 3. Quantitative Financial Health Dashboard
+*Key financial ratios including Revenue Growth, Gross Margin, Debt-to-Equity, P/E Ratio, ROE, and Free Cash Flow.*
+![Financial Health](docs/images/03_financial_health.jpg)
+
+---
+
+### 4. Qualitative News & Sentiment Intelligence
+*AI sentiment extraction across recent market announcements and news developments.*
+![News & Sentiment](docs/images/04_news_sentiment.jpg)
+
+---
+
+### 5. Categorized Strengths vs. Risk Audit
+*Structured side-by-side breakdown of competitive moats versus operational and geopolitical risks.*
+![Strengths vs Risks](docs/images/05_strengths_vs_risks.jpg)
 
 ---
 
