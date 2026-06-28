@@ -1,168 +1,161 @@
-# EquityLens AI — AI-Powered Investment Research Agent
+# 📈 EquityLens AI — Autonomous Investment Research Agent
 
-EquityLens AI is a real-time autonomous investment research agent built for analyzing public companies. Enter any company name or ticker symbol, and the agent executes a multi-stage parallel research workflow using **LangGraph**, fetching financial statements, real-time news, competitor intelligence, and synthesized valuation insights to generate an actionable **INVEST**, **PASS**, or **HOLD** report streamed directly over Server-Sent Events (SSE).
+<p align="center">
+  <b>Real-time AI investment intelligence agent powered by LangGraph, Groq (Llama 3.3 70B), and Google Gemini 2.5 Flash.</b>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/LangGraph-JS-blue?style=for-the-badge" alt="LangGraph" />
+  <img src="https://img.shields.io/badge/Groq-Llama%203.3%2070B-orange?style=for-the-badge" alt="Groq" />
+  <img src="https://img.shields.io/badge/Google%20Gemini-2.5%20Flash-green?style=for-the-badge&logo=google" alt="Gemini" />
+  <img src="https://img.shields.io/badge/TypeScript-5.8-blue?style=for-the-badge&logo=typescript" alt="TypeScript" />
+</p>
 
 ---
 
-## 📋 Table of Contents
+## 📌 Table of Contents
 - [Overview](#-overview)
+- [Key Features](#-key-features)
 - [How to Run](#-how-to-run)
-- [How It Works](#-how-it-works)
+- [Architecture & How It Works](#-architecture--how-it-works)
 - [Key Decisions & Trade-offs](#-key-decisions--trade-offs)
-- [Example Runs](#-example-runs)
-- [What I Would Improve With More Time](#-what-i-would-improve-with-more-time)
-- [🎁 Bonus Points: LLM Chat Session Logs](#-bonus-points-llm-chat-session-logs)
+- [Example Analysis Runs](#-example-analysis-runs)
+- [Future Enhancements](#-future-enhancements)
+- [Bonus Points: LLM Session Logs](#-bonus-points-llm-session-logs)
 
 ---
 
 ## 🔍 Overview
 
-Analyzing public equities requires synthesizing multi-modal quantitative and qualitative signals: financial statement metrics, valuation multiples, recent news developments, and competitive market positioning. Doing this manually is time-consuming and prone to cognitive bias.
+**EquityLens AI** is an autonomous, real-time investment research agent designed for institutional-grade equity evaluation. By entering any public company name or ticker symbol, the agent initiates a multi-stage parallel research workflow using **LangGraph.js**.
 
-**EquityLens AI** automates this workflow using an agentic state graph pipeline. Key capabilities include:
-- **Real-Time Stage Streaming**: Live progress updates for each research milestone (Ticker Lookup, Financial Statements, News Sentiment, Competitor Analysis, Risk Assessment, and Final Thesis).
-- **Multi-Model Intelligence**: Combines **Groq (Llama 3.3 70B)** for ultra-fast structured research synthesis with **Google Gemini 2.5 Flash** for deep financial reasoning and risk evaluation.
-- **Interactive Financial Dashboard**: Dynamic charts (Revenue & Net Income trends), risk highlights, key growth metrics, and formatted investment thesis statements.
+The system dynamically fetches real-time financial statements, extracts market news sentiment, maps key competitors, and synthesizes quantitative metrics into an actionable **INVEST**, **PASS**, or **HOLD** thesis with confidence scoring and risk analysis.
+
+---
+
+## ⚡ Key Features
+
+- 🔄 **Real-Time Stage Streaming**: Live execution feedback over Server-Sent Events (SSE) as each graph node processes research tasks.
+- 🤖 **Dual-LLM Intelligence**:
+  - **Groq (Llama 3.3 70B)** for lightning-fast orchestration, web search structuring, and data extraction.
+  - **Google Gemini 2.5 Flash** for deep financial analysis, risk assessment, and investment decision synthesis.
+- 📊 **Financial Dashboard**: Interactive UI rendering historical revenue/net income charts, key metrics (P/E ratio, ROE, Debt-to-Equity, FCF), and categorized risk factors.
+- 🛡️ **Nuanced 3-Tier Recommendation**: Uses **INVEST**, **PASS**, or **HOLD** (instead of forcing binary calls) to accurately reflect market uncertainty and valuation sensitivity.
 
 ---
 
 ## 🚀 How to Run
 
-### Prerequisites
-- Node.js 18.x or later
-- npm or pnpm
+### 1. Prerequisites
+Ensure you have **Node.js 18.x+** and **npm** installed on your system.
 
-### Setup Steps
+### 2. Installation
+Clone the repository and install dependencies:
+```bash
+git clone https://github.com/Abhishek197088/AI-IIM-Investment-Intelligence.git
+cd AI-IIM-Investment-Intelligence
+npm install
+```
 
-1. **Navigate into the project directory**:
-   ```bash
-   cd ai
-   ```
+### 3. Environment Setup
+Create a `.env.local` file in the project root directory:
+```bash
+cp .env.example .env.local
+```
 
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+Populate `.env.local` with your API keys:
+```env
+GOOGLE_API_KEY=your_google_gemini_api_key
+GROQ_API_KEY=your_groq_api_key
+TAVILY_API_KEY=your_tavily_api_key
+FMP_API_KEY=your_financial_modeling_prep_key
+DEMO_MODE=false
+```
+*(Tip: Set `DEMO_MODE=true` to test locally with mock responses without consuming API credits).*
 
-3. **Configure Environment Variables**:
-   Create a `.env.local` file in the root of the project (you can copy `.env.example`):
-   ```bash
-   cp .env.example .env.local
-   ```
-   Add your API keys to `.env.local`:
-   ```env
-   GOOGLE_API_KEY=your_google_gemini_api_key
-   GROQ_API_KEY=your_groq_api_key
-   TAVILY_API_KEY=your_tavily_api_key
-   FMP_API_KEY=your_financial_modeling_prep_api_key
-   DEMO_MODE=false
-   ```
-
-   *(Note: Set `DEMO_MODE=true` if you wish to run local mock evaluations without consuming live external API credits).*
-
-4. **Start the Development Server**:
-   ```bash
-   npm run dev
-   ```
-
-5. **Open the App**:
-   Navigate to [http://localhost:3000](http://localhost:3000) in your browser.
+### 4. Start the Application
+Run the Next.js development server:
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your web browser.
 
 ---
 
-## ⚙️ How It Works
+## 🏗️ Architecture & How It Works
 
-### Architecture & Approach
+The execution engine is built on **LangGraph.js** using a 7-node state graph with parallel research execution:
 
-The system is built on Next.js 14 (App Router) and leverages **LangGraph.js** to construct a typed cyclic state graph consisting of 7 distinct nodes:
-
-```
-                      ┌───────────────────────────────┐
-                      │    researchOrchestratorNode   │
-                      └──────────────┬────────────────┘
-                                     │
-              ┌──────────────────────┼──────────────────────┐
-              ▼                      ▼                      ▼
-    ┌───────────────────┐  ┌───────────────────┐  ┌───────────────────┐
-    │ financialResearch │  │   newsResearch    │  │ competitorResearch│
-    └─────────┬─────────┘  └─────────┬─────────┘  └─────────┬─────────┘
-              │                      │                      │
-              └──────────────────────┼──────────────────────┘
-                                     ▼
-                      ┌───────────────────────────────┐
-                      │    financialAnalysisNode      │
-                      └──────────────┬────────────────┘
-                                     ▼
-                      ┌───────────────────────────────┐
-                      │      riskAssessmentNode       │
-                      └──────────────┬────────────────┘
-                                     ▼
-                      ┌───────────────────────────────┐
-                      │    investmentDecisionNode     │
-                      └───────────────────────────────┘
+```mermaid
+graph TD
+    A[START: researchOrchestratorNode] --> B[financialResearchNode]
+    A --> C[newsResearchNode]
+    A --> D[competitorResearchNode]
+    B --> E[financialAnalysisNode]
+    C --> E
+    D --> E
+    E --> F[riskAssessmentNode]
+    F --> G[investmentDecisionNode]
+    G --> H[END]
 ```
 
-1. **`researchOrchestratorNode`**: Resolves company ticker symbol, exchange details, and initiates initial web research via Tavily API.
+### Node Responsibilities
+1. **`researchOrchestratorNode`**: Resolves company ticker symbol, exchange information, and queries general business background via Tavily API.
 2. **Parallel Research Fan-Out**:
-   - **`financialResearchNode`**: Queries Financial Modeling Prep (FMP) API for revenue trends, net income, margins, P/E ratios, and cash flows.
-   - **`newsResearchNode`**: Searches recent news headlines and performs sentiment extraction.
-   - **`competitorResearchNode`**: Maps out primary market competitors and relative market share signals.
-3. **Synthesis & Reasoning Fan-In**:
-   - **`financialAnalysisNode`**: Uses Gemini 2.5 Flash to evaluate fundamental strength and capital allocation.
-   - **`riskAssessmentNode`**: Conducts a thorough downside risk, regulatory, and macro risk audit.
-   - **`investmentDecisionNode`**: Synthesizes all gathered evidence into an **INVEST / PASS / HOLD** decision, target horizon, confidence score (0-100%), and investment thesis.
+   - **`financialResearchNode`**: Pulls financial statements, historical revenue, margins, and ratios from Financial Modeling Prep (FMP) API.
+   - **`newsResearchNode`**: Gathers recent news sentiment and key market announcements.
+   - **`competitorResearchNode`**: Maps direct industry peers and market share dynamics.
+3. **Analysis & Decision Fan-In**:
+   - **`financialAnalysisNode`**: Synthesizes operational efficiency, capital allocation, and valuation multiples using Gemini 2.5 Flash.
+   - **`riskAssessmentNode`**: Identifies downside risks, regulatory hurdles, and macroeconomic factors.
+   - **`investmentDecisionNode`**: Formulates the final thesis, investment horizon, confidence score, and actionable call.
 
 ---
 
-## 💡 Key Decisions & Trade-offs
+## ⚖️ Key Decisions & Trade-offs
 
-- **LangGraph over Linear Chains**: LangGraph provides a robust, state-managed execution graph with branching, state merging, and real-time streaming hooks. A simple sequential chain lacks state accumulation and parallel node execution.
-- **Dual-Model Strategy**:
-  - **Groq (Llama 3.3 70B)**: Chosen for orchestrating initial research steps due to its low latency and tool extraction accuracy.
-  - **Gemini 2.5 Flash**: Chosen for financial analysis and final investment decision generation due to its long-context reasoning power and quality-to-cost efficiency.
-- **Server-Sent Events (SSE) streaming**: Implemented over standard POST/REST endpoints to give immediate visual progress to the user as each graph node finishes execution.
-- **INVEST / PASS / HOLD Framework**: While binary frameworks force a call on high-uncertainty stocks, introducing a **HOLD** option allows the agent to honestly express low-conviction or valuation-neutral scenarios.
-- **Scope Trade-offs**: To focus on core research execution, full DCF modeling engines, portfolio aggregation, and user auth were left out of this initial version.
-
----
-
-## 📊 Example Runs
-
-### 1. Infosys (INFY)
-- **Decision**: `INVEST`
-- **Confidence**: `78%`
-- **Target Horizon**: `Long`
-- **Thesis Summary**: High-quality digital transformation partner benefiting from durable cloud modernization and enterprise AI integration. Strong balance sheet with minimal debt and consistent dividend payouts offsets near-term discretionary spending slowdowns.
-
-### 2. Paytm (PAYTM)
-- **Decision**: `PASS`
-- **Confidence**: `72%`
-- **Target Horizon**: `Short`
-- **Thesis Summary**: Regulatory overhangs and intense domestic competition create significant downside uncertainty. While digital payments volume remains large, lack of proven sustained net profitability justifies a cautious stance.
-
-### 3. Apple Inc. (AAPL)
-- **Decision**: `INVEST`
-- **Confidence**: `85%`
-- **Target Horizon**: `Long`
-- **Thesis Summary**: Ecosystem lock-in, recurring high-margin services growth, and strong shareholder yield via buybacks support a bullish outlook, even amidst elevated market valuation multiples.
+| Decision | Choice | Rationale / Trade-off |
+| :--- | :--- | :--- |
+| **Workflow Engine** | LangGraph.js | Provides a typed, stateful graph with parallel node execution and fine-grained streaming control compared to linear chains. |
+| **LLM Strategy** | Groq + Gemini 2.5 | Groq delivers minimal latency for structured data fetching; Gemini 2.5 Flash provides high-reasoning capability for financial modeling at optimal cost. |
+| **Data Protocol** | Server-Sent Events (SSE) | Unidirectional streaming fits serverless HTTP route handlers cleanly without the overhead of WebSockets. |
+| **Recommendation Engine** | INVEST / PASS / HOLD | Adding **HOLD** avoids forced false-binary calls when confidence is below threshold (<40%) or valuation is fair. |
 
 ---
 
-## 📈 What I Would Improve With More Time
+## 📈 Example Analysis Runs
 
-1. **Automated DCF Modeling Engine**: Build an interactive discounted cash flow (DCF) calculator allowing users to adjust growth rates, terminal multiples, and WACC assumptions.
-2. **Portfolio Tracking & Alerts**: Support saved watchlists, real-time price triggers, and news sentiment change notifications.
-3. **Exportable Analyst Reports**: Enable multi-page PDF generation complete with brand formatting, charts, and downloadable CSV data.
-4. **Local Indian Market Data Enhancements**: Integrate direct regulatory filings (BSE/NSE integrations) for deeper domestic financial accuracy.
+### 🟢 Infosys Ltd (INFY)
+- **Recommendation**: `INVEST`
+- **Confidence Score**: `78%`
+- **Horizon**: `Long-Term`
+- **Thesis Summary**: Strong digital transformation leadership, high free cash flow conversion, clean balance sheet, and robust return on equity offset short-term macroeconomic headwinds in enterprise IT spending.
+
+### 🔴 Paytm (PAYTM)
+- **Recommendation**: `PASS`
+- **Confidence Score**: `72%`
+- **Horizon**: `Short-Term`
+- **Thesis Summary**: Regulatory complexity, persistent net profitability challenges, and aggressive fintech competition present unfavorable risk-reward parameters for conservative investors.
+
+### 🟢 Apple Inc. (AAPL)
+- **Recommendation**: `INVEST`
+- **Confidence Score**: `85%`
+- **Horizon**: `Long-Term`
+- **Thesis Summary**: Unrivaled hardware-software ecosystem integration, high-margin expanding services revenue, and immense shareholder return programs support investment despite elevated market multiples.
 
 ---
 
-## 🎁 Bonus Points: LLM Chat Session Logs
+## 🔮 Future Enhancements
 
-As mandated by the project instructions, this application was built iteratively by pair-programming with an advanced AI Agentic Assistant (Antigravity with Gemini 3.5 Flash). 
+- 📊 **Interactive DCF Modeler**: Allow users to tweak discount rates, terminal growth rates, and revenue projections directly in the UI.
+- 📁 **Exportable PDF Reports**: Generate styled, downloadable institutional investment memos.
+- 🔔 **Watchlist Alerts**: Real-time email or push notifications on material news or financial rating changes.
 
-The full chronological execution trajectory, internal agent reasoning steps, code modifications, and interaction transcripts are preserved locally within the workspace environment logs:
-- Log location: `<appDataDir>/brain/<conversation-id>/.system_generated/logs/transcript.jsonl`
-- Highlights of the session include prompt iteration on agent graph state schemas, API integration debugging, and environment setup.
-#   A I - I I M - I n v e s t m e n t - I n t e l l i g e n c e  
- 
+---
+
+## 🎁 Bonus Points: LLM Session Logs
+
+This project was developed through pair-programming with an AI coding agent (**Gemini 3.5 Flash**). Complete chronological transcripts, execution traces, tool invocation logs, and decision-making steps are recorded in:
+- Detailed Summary: [`transcripts/README.md`](transcripts/README.md)
+- Raw System Logs: `<appDataDir>/brain/<conversation-id>/.system_generated/logs/transcript.jsonl`
